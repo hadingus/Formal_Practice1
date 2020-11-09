@@ -3,6 +3,15 @@
 input::input(const std::string &regular, char symbol, int count): regular(regular),
                                                                symbol(symbol), symbCount(count) {}
 
+bool input::isValid() const {
+    for (char reg_char : regular) {
+        if (!is_reg_char(reg_char)) {
+            return false;
+        }
+    }
+    return isLetter(symbol);
+}
+
 bool isLetter(char c) {
     return c >= 'a' && c <= 'c';
 }
@@ -11,17 +20,16 @@ bool is_reg_char(char c) {
     return c == '.' || c == '*' || c == '+' || isLetter(c);
 }
 
-std::optional<input> getInput() {
+input getInput() {
     std::string regular;
     char symb;
     int count;
     std::cin >> regular >> symb >> count;
-    for (char reg_char : regular) {
-        if (!is_reg_char(reg_char)) {
-            return std::nullopt;
-        }
+    input data(regular, symb, count);
+    if (!data.isValid()) {
+        throw std::invalid_argument("Invalid input");
     }
-    return input(regular, symb, count);
+    return data;
 }
 
 void push_letter(std::stack<std::vector<bool>> &reg_st, char symb, input &inp) {
@@ -65,6 +73,9 @@ std::vector<bool> mskITER(std::vector<bool> &msk) {
 }
 
 std::pair<std::vector<bool>, std::vector<bool>> getTopTwice(std::stack<std::vector<bool>> &st) {
+    if (st.size() < 2) {
+        throw std::invalid_argument("Invalid regular format");
+    }
     auto vec1 = st.top();
     st.pop();
     auto vec2 = st.top();
@@ -73,17 +84,11 @@ std::pair<std::vector<bool>, std::vector<bool>> getTopTwice(std::stack<std::vect
 }
 
 void regAnd(std::stack<std::vector<bool>> &regStack) {
-    if (regStack.size() < 2) {
-        throw std::invalid_argument("Invalid regular format");
-    }
     auto [msk1, msk2] = getTopTwice(regStack);
     regStack.push(mskAND(msk1, msk2));
 }
 
 void regMul(std::stack<std::vector<bool>> &regStack) {
-    if (regStack.size() < 2) {
-        throw std::invalid_argument("Invalid regular format");
-    }
     auto [msk1, msk2] = getTopTwice(regStack);
     regStack.push(mskMUL(msk1, msk2));
 }
@@ -120,9 +125,5 @@ bool getAnswer(input &data) {
 
 void solve() {
     auto input_task = getInput();
-    if (!input_task.has_value()) {
-        throw std::invalid_argument("Invalid input");
-    }
-
-    std::cout << (getAnswer(input_task.value()) ? "YES" : "NO");
+    std::cout << (getAnswer(input_task) ? "YES" : "NO");
 }
