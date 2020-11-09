@@ -97,16 +97,11 @@ void regIter(std::stack<std::vector<bool>> &regStack) {
     regStack.push(mskITER(msk));
 }
 
-void solve() {
-    auto input_task = getInput();
-    if (!input_task.has_value()) {
-        throw std::invalid_argument("Invalid input");
-    }
-
+bool getAnswer(input &data) {
     std::stack<std::vector<bool>> regStack;
-    for (char c : input_task->regular) {
+    for (char c : data.regular) {
         if (isLetter(c)) {
-            push_letter(regStack, c, input_task.value());
+            push_letter(regStack, c, data);
         } else if (c == '+') {
             regAnd(regStack);
         } else if (c == '.') {
@@ -120,5 +115,14 @@ void solve() {
         throw std::invalid_argument("Invalid regular format");
     }
     auto result = regStack.top();
-    std::cout << (result[input_task->symbCount] ? "YES" : "NO");
+    return result[data.symbCount];
+}
+
+void solve() {
+    auto input_task = getInput();
+    if (!input_task.has_value()) {
+        throw std::invalid_argument("Invalid input");
+    }
+
+    std::cout << (getAnswer(input_task.value()) ? "YES" : "NO");
 }

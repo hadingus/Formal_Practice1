@@ -34,6 +34,7 @@ void regAnd(std::stack<std::vector<bool>> &regStack);
 void regMul(std::stack<std::vector<bool>> &regStack);
 void regIter(std::stack<std::vector<bool>> &regStack);
 
+bool getAnswer(input &data);
 void solve();
 
 #endif
