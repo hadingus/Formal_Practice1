@@ -197,3 +197,50 @@ TEST(RegTest, regIterTest) {
     }
 }
 
+TEST(AlgoTest, IncorrectDataTest) {
+    input data("ab+cd", 'a', 3);
+    EXPECT_ANY_THROW(getAnswer(data));
+    input data1("+aba", 'a', 4);
+    EXPECT_ANY_THROW(getAnswer(data1));
+    input data2("bab+", 'a', 4);
+    EXPECT_ANY_THROW(getAnswer(data2));
+    data.regular = "*aaa";
+    EXPECT_ANY_THROW(getAnswer(data));
+    data.regular = "a*aaa";
+    EXPECT_ANY_THROW(getAnswer(data));
+    data.regular = "ab+c*";
+    EXPECT_ANY_THROW(getAnswer(data));
+    data.regular = ".bbaa";
+    EXPECT_ANY_THROW(getAnswer(data));
+    data.regular = "ab.abbabaab";
+    EXPECT_ANY_THROW(getAnswer(data));
+    data.regular = "cbfd";
+    EXPECT_ANY_THROW(getAnswer(data));
+    data.regular = "ab+c+.";
+    EXPECT_ANY_THROW(getAnswer(data));
+}
+
+TEST(AlgoTest, TaskTest) {
+    input data("ab.c.a.", 'a', 2);
+    EXPECT_EQ(getAnswer(data), true);
+    data.symbCount = 1;
+    EXPECT_EQ(getAnswer(data), false);
+    input data1("ab.a+c.a.", 'a', 2);
+    EXPECT_EQ(getAnswer(data1), true);
+    data1.symbCount = 1;
+    EXPECT_EQ(getAnswer(data1), false);
+    data1.symbCount = 3;
+    EXPECT_EQ(getAnswer(data1), false);
+    input data2("ab.a+c.a.*a.b.a+", 'a', 1);
+    EXPECT_EQ(getAnswer(data2), true);
+    data2.symbCount = 2;
+    EXPECT_EQ(getAnswer(data2), false);
+    data2.symbCount = 115;
+    EXPECT_EQ(getAnswer(data2), true);
+    input data3("aab.*c+a.*ab.+.c.", 'a', 2);
+    EXPECT_EQ(getAnswer(data3), true);
+    data3.symbCount = 161;
+    EXPECT_EQ(getAnswer(data3), true);
+    data3.symbCount = 0;
+    EXPECT_EQ(getAnswer(data3), false);
+}
