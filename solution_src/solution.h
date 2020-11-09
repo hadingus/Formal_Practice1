@@ -9,7 +9,6 @@
 #include <string>
 #include <stack>
 #include <vector>
-#include <optional>
 
 struct input {
     std::string regular;
