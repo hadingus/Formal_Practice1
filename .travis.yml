@@ -13,6 +13,8 @@ install:
 
 
 script:
+  - export CC=gcc-7
+  - export CXX=g++-7
   - mkdir build
   - cd build
   - cmake ..
@@ -21,7 +23,11 @@ script:
 
 addons:
   apt:
-    packages: lcov
+    packages:
+      - lcov
+      - g++-7
+    sources:
+      - ubuntu-toolchain-r-test
 
 after_success:
   # Create lcov report
